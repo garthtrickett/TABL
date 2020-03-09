@@ -26,9 +26,11 @@ home = str(Path.home())
 file_name = "model_name=two_model&WL=10&pt=1&sl=1&min_ret=0.0021&vbs=600&head=0&skip=0&fraction=1&vol_max=0.0022&vol_min=0.00210001&filter_type=none&cm_vol_mod=0&sample_weights=on&frac_diff=off&prices_type=orderbook&ntb=True&tslbc=True.h5"
 path = home + "/ProdigyAI/data/preprocessed/" + file_name
 h5f = h5py.File(path, "r")
-x = h5f["X"][:]
+X = h5f["X"][:]
 y = h5f["y"][:]
 h5f.close()
+## PRODIGY AI HOCKUS POCKUS END
+
 
 # get Bilinear model
 projection_regularizer = None
@@ -52,6 +54,42 @@ model.summary()
 class_weight = {0: 1e6 / 300.0, 1: 1e6 / 400.0, 2: 1e6 / 300.0}
 
 
+## Simple Training, Validation and Test splits
+X_train_and_val = X[0 : round(0.78 * len(X))]
+y_train_and_val = y[0 : round(0.78 * len(y))]
+
+X_test = X[round(0.8 * len(X)) :]
+y_test = y[round(0.8 * len(y)) :]
+
+X_train = X_train_and_val[0 : round(0.78 * len(X_train_and_val))]
+y_train = y_train_and_val[0 : round(0.78 * len(y_train_and_val))]
+
+X_val = X_train_and_val[0 : round(0.78 * len(X_train_and_val))]
+y_val = y_train_and_val[0 : round(0.78 * len(y_train_and_val))]
+
 # training
 # model.fit(x, y, batch_size=256, epochs=10000, class_weight=class_weight)
-model.fit(x, y, batch_size=256, epochs=500)  # no class weight
+model.fit(
+    X_train,
+    y_train,
+    validation_data=(X_val, y_val),
+    batch_size=256,
+    epochs=500,
+    shuffle=False,
+)  # no class weight
+
+
+score = model.evaluate(
+    x=X_test,
+    y=y_test,
+    batch_size=256,
+    verbose=1,
+    sample_weight=None,
+    steps=None,
+    callbacks=None,
+    max_queue_size=10,
+    workers=1,
+    use_multiprocessing=False,
+)
+
+print(score)
