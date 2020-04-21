@@ -9,7 +9,7 @@ import numpy as np
 
 
 # 1 hidden layer network with input: 40x10, hidden 120x5, output 3x1
-template = [[40, 10], [60, 10], [120, 5], [3, 1]]
+template = [[40, 200], [60, 10], [120, 5], [3, 1]]
 
 # random data
 # random data
@@ -22,12 +22,15 @@ from pathlib import Path
 import h5py
 
 home = str(Path.home())
-
-file_name = "model_name=two_model&WL=10&pt=1&sl=1&min_ret=0.00151&vbs=600&head=0&skip=0&fraction=1&vol_max=0.00150002&vol_min=0.00150001&filter_type=none&cm_vol_mod=0&sample_weights=on&frac_diff=off&prices_type=orderbook&ntb=True&tslbc=True.h5"
+file_name = "arch=TABL&name=two_model&WL=100&pt=1&sl=1&min_ret=9.523809523809525e-06&vbs=0.1&head=100000&skip=0&vol_max=9.543809523809525e-06&vol_min=9.533809523809525e-06&filter=none&cm_vol_mod=0&sw=on&fd=off&input=obook&ntb=True&tslbc=True.h5"
 path = home + "/ProdigyAI/data/preprocessed/" + file_name
 h5f = h5py.File(path, "r")
-X = h5f["X"][:]
-y = h5f["y"][:]
+X_train = h5f["X_train"][:]
+y_train = h5f["y_train"][:]
+X_val = h5f["X_val"][:]
+y_val = h5f["y_val"][:]
+X_test = h5f["X_test"][:]
+y_test = h5f["y_test"][:]
 h5f.close()
 ## PRODIGY AI HOCKUS POCKUS END
 
@@ -52,23 +55,6 @@ model.summary()
 
 # create class weight
 class_weight = {0: 1e6 / 300.0, 1: 1e6 / 400.0, 2: 1e6 / 300.0}
-
-# X = X[0:200]
-# y = y[0:200]
-
-## Simple Training, Validation and Test splits
-X_train = X[0 : round(0.78 * len(X))]
-y_train = y[0 : round(0.78 * len(y))]
-
-X_val = X_train[round(0.8 * len(X_train)) :]
-y_val = y_train[round(0.8 * len(y_train)) :]
-
-X_train = X_train[0 : round(0.78 * len(X_train))]
-y_train = y_train[0 : round(0.78 * len(y_train))]
-
-
-X_test = X[round(0.8 * len(X)) :]
-y_test = y[round(0.8 * len(y)) :]
 
 
 # training
