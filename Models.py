@@ -4,7 +4,6 @@
 @author: Dat Tran (dat.tranthanh@tut.fi)
 """
 
-
 from third_party_libraries.TABL import Layers
 import keras
 
@@ -74,7 +73,8 @@ def TABL(
 
     x = inputs
     for k in range(1, len(template) - 1):
-        x = Layers.BL(template[k], projection_regularizer, projection_constraint)(x)
+        x = Layers.BL(template[k], projection_regularizer,
+                      projection_constraint)(x)
         x = keras.layers.Activation("relu")(x)
         x = keras.layers.Dropout(dropout)(x)
 
@@ -94,4 +94,3 @@ def TABL(
     model.compile(optimizer, "categorical_crossentropy", ["acc"])
 
     return model
-
