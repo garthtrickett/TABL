@@ -6,6 +6,11 @@
 
 from third_party_libraries.TABL import Layers
 import keras
+import tensorflow as tf
+# tf.config.optimizer.set_experimental_options({"auto_mixed_precision": True})
+# from tensorflow.keras.mixed_precision import experimental as mixed_precision
+# policy = mixed_precision.Policy('mixed_float16')
+# mixed_precision.set_policy(policy)
 
 
 def BL(template, dropout=0.1, regularizer=None, constraint=None):
@@ -37,9 +42,10 @@ def BL(template, dropout=0.1, regularizer=None, constraint=None):
 
     model = keras.Model(inputs=inputs, outputs=outputs)
 
-    optimizer = keras.optimizers.Adam(0.01)
-
-    model.compile(optimizer, "categorical_crossentropy", ["acc"])
+    opt = keras.optimizers.Adam(0.01)
+    # opt = tf.keras.mixed_precision.experimental.LossScaleOptimizer(
+    #     opt, "dynamic")
+    model.compile(opt, "categorical_crossentropy", ["acc"])
 
     return model
 
@@ -89,8 +95,9 @@ def TABL(
 
     model = keras.Model(inputs=inputs, outputs=outputs)
 
-    optimizer = keras.optimizers.Adam(0.01)
-
-    model.compile(optimizer, "categorical_crossentropy", ["acc"])
+    opt = keras.optimizers.Adam(0.01)
+    # opt = tf.keras.mixed_precision.experimental.LossScaleOptimizer(
+    #     opt, "dynamic")
+    model.compile(opt, "categorical_crossentropy", ["acc"])
 
     return model

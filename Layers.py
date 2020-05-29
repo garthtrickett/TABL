@@ -8,6 +8,11 @@ from keras import backend as K
 from keras.layers import Layer
 from keras import activations as Activations
 from keras import initializers as Initializers
+# from tensorflow.keras.mixed_precision import experimental as mixed_precision
+import tensorflow as tf
+# tf.config.optimizer.set_experimental_options({"auto_mixed_precision": True})
+# policy = mixed_precision.Policy('mixed_float16')
+# mixed_precision.set_policy(policy)
 
 
 class Constraint(object):
